@@ -6,8 +6,8 @@
   <title>Daily HSE Inspection Report</title>
   <style>
     :root{
-      --bg:#0b1220; --card:#101a33; --card2:#0f1830; --txt:#e8eefc; --muted:#a9b6d8;
-      --line:rgba(255,255,255,.12); --accent:#4aa3ff; --danger:#ff5b6e; --ok:#38d39f;
+      --bg:#0b1220; --card:#101a33; --txt:#e8eefc; --muted:#a9b6d8;
+      --line:rgba(255,255,255,.12); --danger:#ff5b6e; --ok:#38d39f;
       --shadow: 0 12px 40px rgba(0,0,0,.35);
       --radius: 14px;
     }
@@ -17,9 +17,7 @@
       line-height:1.4;
     }
     .wrap{ max-width:1100px; margin:28px auto; padding:0 16px 60px; }
-    header{
-      display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:16px;
-    }
+    header{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:16px; }
     h1{ font-size:22px; margin:0; letter-spacing:.2px; }
     .sub{ color:var(--muted); font-size:13px; margin-top:6px; }
     .pill{
@@ -48,14 +46,13 @@
       border-radius:12px; padding:10px 12px; outline:none;
     }
     textarea{ min-height:92px; resize:vertical; }
-    input:focus, select:focus, textarea:focus{ border-color:rgba(74,163,255,.7); box-shadow:0 0 0 3px rgba(74,163,255,.15); }
     .hint{ font-size:12px; color:var(--muted); margin-top:6px; }
     .hr{ height:1px; background:var(--line); margin:14px 0; }
-
     table{ width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px; border:1px solid var(--line); }
     th, td{ padding:10px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
     th{ text-align:left; font-size:12px; color:var(--muted); background:rgba(255,255,255,.03); }
     tr:last-child td{ border-bottom:none; }
+
     .status{
       display:inline-flex; gap:8px; align-items:center; font-size:12px; padding:8px 10px; border-radius:999px;
       border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--muted);
@@ -68,7 +65,6 @@
       border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--txt);
       padding:10px 14px; border-radius:12px; cursor:pointer;
     }
-    <div class="hint" id="liveStatus" style="margin-top:10px;">Ready.</div>
     button.primary{
       background:linear-gradient(180deg, rgba(74,163,255,.25), rgba(74,163,255,.08));
       border-color:rgba(74,163,255,.45);
@@ -77,13 +73,12 @@
       background:linear-gradient(180deg, rgba(255,91,110,.20), rgba(255,91,110,.06));
       border-color:rgba(255,91,110,.45);
     }
-    .small{ font-size:12px; color:var(--muted); }
     .err{ color:var(--danger); font-size:12px; margin-top:8px; display:none; }
     .okmsg{ color:var(--ok); font-size:12px; margin-top:8px; display:none; }
-
     .obs-controls{ display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between; align-items:center; }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
@@ -94,18 +89,18 @@
       <div class="pill" id="nowPill">Loading date/time…</div>
     </header>
 
-    <!-- Hidden iframe for form submission (avoids CORS issues with Apps Script) -->
     <iframe name="submitFrame" style="display:none;"></iframe>
 
-    <form id="hseForm" method="post" target="submitFrame" action="https://script.google.com/macros/s/AKfycbzr3gQREqorj1XaLPXEoe739ealOmZs3w-3oa3NZB41U7-NgnV0ezW0ETcTxJ_GN79wuw/exec">
-      <!-- Apps Script reads this -->
+    <form id="hseForm" method="post" target="submitFrame"
+      action="https://script.google.com/macros/s/AKfycbzr3gQREqorj1XaLPXEoe739ealOmZs3w-3oa3NZB41U7-NgnV0ezW0ETcTxJ_GN79wuw/exec">
+
       <input type="hidden" name="payload" id="payload" />
 
       <div class="grid">
-        <!-- LEFT: MAIN -->
         <div class="card">
           <h2>Report Details</h2>
           <div class="body">
+
             <div class="row two">
               <div>
                 <label>Inspector (HSE Officer) Name *</label>
@@ -133,40 +128,15 @@
             </div>
 
             <div class="row three">
-              <div>
-                <label>Date</label>
-                <input id="reportDate" type="date" />
-              </div>
-              <div>
-                <label>Time</label>
-                <input id="reportTime" type="time" />
-              </div>
+              <div><label>Date</label><input id="reportDate" type="date" /></div>
+              <div><label>Time</label><input id="reportTime" type="time" /></div>
               <div>
                 <label>Weather</label>
                 <select id="weather">
                   <option value="">Select</option>
-                  <option>Sunny</option>
-                  <option>Hot</option>
-                  <option>Windy</option>
-                  <option>Dusty</option>
-                  <option>Cloudy</option>
-                  <option>Rain</option>
+                  <option>Sunny</option><option>Hot</option><option>Windy</option><option>Dusty</option>
+                  <option>Cloudy</option><option>Rain</option>
                 </select>
-              </div>
-            </div>
-
-            <div class="row three">
-              <div>
-                <label>Manpower On Site (Total)</label>
-                <input id="manpower" type="number" min="0" placeholder="e.g., 45" />
-              </div>
-              <div>
-                <label>Visitors</label>
-                <input id="visitors" type="number" min="0" placeholder="e.g., 2" />
-              </div>
-              <div>
-                <label>Subcontractors</label>
-                <input id="subcontractors" type="text" placeholder="e.g., ABC Lifting" />
               </div>
             </div>
 
@@ -177,61 +147,32 @@
 
             <table>
               <thead>
-                <tr>
-                  <th style="width:34%;">Item</th>
-                  <th style="width:18%;">Status</th>
-                  <th>Remarks</th>
-                </tr>
+                <tr><th style="width:34%;">Item</th><th style="width:18%;">Status</th><th>Remarks</th></tr>
               </thead>
               <tbody id="checklistBody"></tbody>
             </table>
 
             <div class="hr"></div>
 
-            <div class="obs-controls">
-              <div>
-                <h2 style="margin:0; font-size:14px;">Observations / Non-Conformities</h2>
-                <div class="hint">Add as many observations as needed (unsafe acts/conditions, corrective actions, responsible person, due date).</div>
-              </div>
-              <div class="btns">
-                <button type="button" id="addObsBtn" class="primary">+ Add Observation</button>
-                <button type="button" id="clearObsBtn" class="danger">Clear Observations</button>
-              </div>
-            </div>
-
-            <div id="obsContainer" style="margin-top:12px;"></div>
-
-            <div class="hr"></div>
-
             <div class="row">
               <div>
-                <label>General Comments / Summary</label>
-                <textarea id="summary" placeholder="Overall site safety condition, key notes, follow-ups..."></textarea>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <label>Photos (Max 5, each recommended ≤ 1MB)</label>
+                <label>Photos (Max 5)</label>
                 <input id="photos" type="file" accept="image/*" multiple />
-                <div class="hint">Photos will be saved inside the report folder in Google Drive.</div>
               </div>
             </div>
 
             <div class="btns">
-              <button type="button" id="previewBtn">Preview JSON</button>
               <button type="submit" class="primary" id="submitBtn">Submit Report</button>
             </div>
 
+            <!-- ✅ live status is placed correctly -->
+            <div class="hint" id="liveStatus" style="margin-top:10px;">Ready.</div>
+
             <div class="err" id="errBox"></div>
             <div class="okmsg" id="okBox"></div>
-            <div class="small" style="margin-top:10px;">
-              Note: This page is safe to host on GitHub Pages. Drive saving happens via Google Apps Script.
-            </div>
           </div>
         </div>
 
-        <!-- RIGHT: STATUS / QUICK VIEW -->
         <div class="card">
           <h2>Submission Status</h2>
           <div class="body">
@@ -239,60 +180,20 @@
               <span class="dot" id="statusDot"></span>
               <span id="statusText">Not submitted</span>
             </div>
-            <div class="hr"></div>
-            <div class="small">
-              <div><b>What happens on submit:</b></div>
-              <ul>
-                <li>Creates/uses Inspector folder in Drive</li>
-                <li>Creates report folder with timestamp</li>
-                <li>Creates Google Doc report + PDF</li>
-                <li>Saves uploaded photos inside that report folder</li>
-              </ul>
-            </div>
-            <div class="hr"></div>
-            <div class="small">
-              <b>Tip:</b> If you need company branding (logo, colors, header), tell me your preferred header text and I’ll update the template.
-            </div>
           </div>
         </div>
       </div>
     </form>
-
-    <!-- Preview modal (simple) -->
-    <dialog id="previewDialog" style="max-width:900px; width:95%; border:1px solid rgba(255,255,255,.18); border-radius:14px; background:#0a1021; color:#e8eefc;">
-      <div style="padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.12); display:flex; justify-content:space-between; align-items:center;">
-        <b>Payload Preview</b>
-        <button id="closePreview" style="padding:6px 10px;">Close</button>
-      </div>
-      <pre id="previewPre" style="margin:0; padding:14px 16px; white-space:pre-wrap; word-break:break-word; max-height:70vh; overflow:auto;"></pre>
-    </dialog>
+  </div>
 
   <script>
-    // -----------------------------
-    // CONFIG
-    // -----------------------------
     const CHECKLIST_ITEMS = [
-      "PPE Compliance (Helmet, Safety Shoes, Vest, Gloves, Eye Protection)",
+      "PPE Compliance",
       "Toolbox Talk Conducted",
-      "Housekeeping / Waste Management",
-      "Barricading / Signage / Exclusion Zones",
-      "Excavation & Trenching Controls (shoring, access/egress, edge protection)",
-      "Lifting Operations (approved plan, certified gear, banksman, tag lines)",
-      "Work at Height (scaffold tags, harness, anchor points, ladder condition)",
-      "Electrical Safety (LOTO, cabling, DB condition, grounding, inspections)",
-      "Confined Space Controls (permit, gas test, rescue plan, standby man)",
-      "Hot Works (permit, fire watch, extinguishers, gas cylinders secured)",
-      "Plant & Vehicles (pre-start checks, reverse alarm, seat belt, spotter)",
-      "Traffic Management (routes, cones, marshal, pedestrian separation)",
-      "Emergency Preparedness (first aid, eyewash, muster point, contacts)",
-      "Environmental Controls (spill kit, noise/dust controls, water protection)"
+      "Housekeeping / Waste Management"
     ];
-
     const STATUS_OPTIONS = ["Compliant", "Non-Compliant", "N/A"];
 
-    // -----------------------------
-    // UTIL
-    // -----------------------------
     function pad(n){ return String(n).padStart(2,'0'); }
     function isoDate(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
     function isoTime(d){ return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
@@ -321,7 +222,6 @@
       setStatus('ok','Submitted');
     }
 
-    // Compress image (resize max 1600px) -> base64 JPEG
     async function fileToBase64Jpeg(file){
       const img = await new Promise((resolve, reject) => {
         const i = new Image();
@@ -330,7 +230,7 @@
         i.src = URL.createObjectURL(file);
       });
 
-      const maxDim = 1600;
+      const maxDim = 1400;
       let { width, height } = img;
       const scale = Math.min(1, maxDim / Math.max(width, height));
       width = Math.round(width * scale);
@@ -338,26 +238,19 @@
 
       const canvas = document.createElement('canvas');
       canvas.width = width; canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
 
-      // quality 0.8
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
       URL.revokeObjectURL(img.src);
-      return dataUrl; // "data:image/jpeg;base64,..."
+      return dataUrl;
     }
 
-    // -----------------------------
-    // INIT UI
-    // -----------------------------
     (function init(){
-      // date/time
       const now = new Date();
       document.getElementById('nowPill').textContent = `Now: ${isoDate(now)} ${isoTime(now)}`;
       document.getElementById('reportDate').value = isoDate(now);
       document.getElementById('reportTime').value = isoTime(now);
 
-      // checklist rows
       const tbody = document.getElementById('checklistBody');
       CHECKLIST_ITEMS.forEach((item, idx) => {
         const tr = document.createElement('tr');
@@ -368,21 +261,13 @@
         const tdStatus = document.createElement('td');
         const sel = document.createElement('select');
         sel.id = `chk_status_${idx}`;
-        const opt0 = document.createElement('option');
-        opt0.value = ""; opt0.textContent = "Select";
-        sel.appendChild(opt0);
-        STATUS_OPTIONS.forEach(v => {
-          const o = document.createElement('option');
-          o.value = v; o.textContent = v;
-          sel.appendChild(o);
-        });
+        sel.innerHTML = `<option value="">Select</option>` + STATUS_OPTIONS.map(v => `<option>${v}</option>`).join('');
         tdStatus.appendChild(sel);
 
         const tdRemarks = document.createElement('td');
         const inp = document.createElement('input');
         inp.id = `chk_remarks_${idx}`;
         inp.type = "text";
-        inp.placeholder = "Remarks / reference (permit no., location, action taken...)";
         tdRemarks.appendChild(inp);
 
         tr.appendChild(tdItem);
@@ -391,228 +276,76 @@
         tbody.appendChild(tr);
       });
 
-      // default one observation
-      addObservation();
       setStatus(null,'Not submitted');
     })();
 
-    // -----------------------------
-    // OBSERVATIONS
-    // -----------------------------
-    let obsCount = 0;
+    const liveStatus = document.getElementById('liveStatus');
+    const submitFrame = document.querySelector('iframe[name="submitFrame"]');
 
-    function addObservation(){
-      obsCount++;
-      const container = document.getElementById('obsContainer');
-      const card = document.createElement('div');
-      card.style.border = "1px solid rgba(255,255,255,.12)";
-      card.style.borderRadius = "12px";
-      card.style.padding = "12px";
-      card.style.background = "rgba(0,0,0,.18)";
-      card.style.marginBottom = "10px";
-      card.dataset.obs = String(obsCount);
-
-      card.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px;">
-          <b>Observation #${obsCount}</b>
-          <button type="button" data-remove="${obsCount}" class="danger" style="padding:8px 10px;">Remove</button>
-        </div>
-
-        <div class="row two">
-          <div>
-            <label>Type *</label>
-            <select id="obs_type_${obsCount}" required>
-              <option value="">Select</option>
-              <option>Unsafe Act</option>
-              <option>Unsafe Condition</option>
-              <option>Near Miss</option>
-              <option>Environmental Issue</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label>Risk Level</label>
-            <select id="obs_risk_${obsCount}">
-              <option value="">Select</option>
-              <option>Low</option>
-              <option>Medium</option>
-              <option>High</option>
-              <option>Critical</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label>Description *</label>
-            <textarea id="obs_desc_${obsCount}" required placeholder="Describe the observation clearly (what/where/who)."></textarea>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label>Corrective / Preventive Action</label>
-            <textarea id="obs_action_${obsCount}" placeholder="Action taken or required action, controls, barricades, training, etc."></textarea>
-          </div>
-        </div>
-
-        <div class="row three">
-          <div>
-            <label>Responsible Person</label>
-            <input id="obs_resp_${obsCount}" type="text" placeholder="Name / role" />
-          </div>
-          <div>
-            <label>Target Due Date</label>
-            <input id="obs_due_${obsCount}" type="date" />
-          </div>
-          <div>
-            <label>Status</label>
-            <select id="obs_status_${obsCount}">
-              <option value="">Select</option>
-              <option>Open</option>
-              <option>In Progress</option>
-              <option>Closed</option>
-            </select>
-          </div>
-        </div>
-      `;
-
-      container.appendChild(card);
-
-      card.querySelector(`[data-remove="${obsCount}"]`).addEventListener('click', () => {
-        card.remove();
-      });
-    }
-
-    document.getElementById('addObsBtn').addEventListener('click', addObservation);
-    document.getElementById('clearObsBtn').addEventListener('click', () => {
-      document.getElementById('obsContainer').innerHTML = '';
-      obsCount = 0;
-      addObservation();
+    submitFrame.addEventListener('load', () => {
+      showOk("Submitted. Please verify in Google Drive.");
+      liveStatus.textContent = "Server response received.";
+      document.getElementById('submitBtn').disabled = false;
     });
 
-    // -----------------------------
-    // BUILD PAYLOAD
-    // -----------------------------
     async function buildPayload(){
       const inspectorName = document.getElementById('inspectorName').value.trim();
       const projectNo = document.getElementById('projectNo').value.trim();
       const projectName = document.getElementById('projectName').value.trim();
       const siteLocation = document.getElementById('siteLocation').value.trim();
-
       if(!inspectorName || !projectNo || !projectName || !siteLocation){
-        throw new Error("Please fill all required fields marked with * (Inspector Name, Project/Contract No., Project Name, Site Location).");
+        throw new Error("Fill required fields (*)");
       }
 
-      const reportDate = document.getElementById('reportDate').value;
-      const reportTime = document.getElementById('reportTime').value;
-
-      // checklist
       const checklist = CHECKLIST_ITEMS.map((label, idx) => ({
         item: label,
         status: document.getElementById(`chk_status_${idx}`).value || "",
         remarks: document.getElementById(`chk_remarks_${idx}`).value.trim()
       }));
 
-      // observations (read from DOM cards)
-      const obsCards = Array.from(document.querySelectorAll('#obsContainer > div[data-obs]'));
-      const observations = obsCards.map(card => {
-        const n = card.dataset.obs;
-        return {
-          type: document.getElementById(`obs_type_${n}`).value || "",
-          risk: document.getElementById(`obs_risk_${n}`).value || "",
-          description: document.getElementById(`obs_desc_${n}`).value.trim(),
-          action: document.getElementById(`obs_action_${n}`).value.trim(),
-          responsible: document.getElementById(`obs_resp_${n}`).value.trim(),
-          dueDate: document.getElementById(`obs_due_${n}`).value || "",
-          status: document.getElementById(`obs_status_${n}`).value || ""
-        };
-      }).filter(o => o.type || o.description || o.action || o.responsible || o.dueDate || o.status || o.risk);
-
-      // Photos -> base64
       const files = Array.from(document.getElementById('photos').files || []);
-      if(files.length > 5) throw new Error("Please upload maximum 5 photos.");
+      if(files.length > 5) throw new Error("Max 5 photos.");
 
       const photos = [];
       for(const f of files){
-        const dataUrl = await fileToBase64Jpeg(f);
         photos.push({
-          fileName: f.name.replace(/[^\w.\- ]+/g,'_'),
-          mimeType: 'image/jpeg',
-          dataUrl
+          fileName: f.name,
+          mimeType: "image/jpeg",
+          dataUrl: await fileToBase64Jpeg(f)
         });
       }
 
       return {
-        meta: {
-          createdClientLocal: new Date().toISOString(),
-          version: "1.0"
-        },
         report: {
           inspectorName,
           inspectorId: document.getElementById('inspectorId').value.trim(),
-          projectNo,
-          projectName,
-          siteLocation,
-          reportDate,
-          reportTime,
+          projectNo, projectName, siteLocation,
+          reportDate: document.getElementById('reportDate').value,
+          reportTime: document.getElementById('reportTime').value,
           weather: document.getElementById('weather').value || "",
-          manpower: document.getElementById('manpower').value || "",
-          visitors: document.getElementById('visitors').value || "",
-          subcontractors: document.getElementById('subcontractors').value.trim(),
-          summary: document.getElementById('summary').value.trim(),
-          checklist,
-          observations
+          checklist
         },
         photos
       };
     }
 
-    // Preview
-    document.getElementById('previewBtn').addEventListener('click', async () => {
+    document.getElementById('hseForm').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      document.getElementById('submitBtn').disabled = true;
+      liveStatus.textContent = "Preparing payload…";
+
       try{
         const payload = await buildPayload();
-        document.getElementById('previewPre').textContent = JSON.stringify(payload, null, 2);
-        document.getElementById('previewDialog').showModal();
+        document.getElementById('payload').value = JSON.stringify(payload);
+
+        liveStatus.textContent = "Posting to Google Apps Script…";
+        ev.target.submit(); // iframe post
       }catch(e){
         showError(e.message || String(e));
+        liveStatus.textContent = "Submit failed (check required fields / photo size).";
+        document.getElementById('submitBtn').disabled = false;
       }
     });
-    document.getElementById('closePreview').addEventListener('click', () => {
-      document.getElementById('previewDialog').close();
-    });
-
-    // Submit (build JSON -> hidden input -> normal form submit to iframe)
-  document.getElementById('hseForm').addEventListener('submit', async (ev) => {
-  ev.preventDefault();
-
-  document.getElementById('submitBtn').disabled = true;
-  setStatus(null,'Submitting…');
-  liveStatus.textContent = "Preparing payload (including photos)…";
-  document.getElementById('errBox').style.display = 'none';
-  document.getElementById('okBox').style.display = 'none';
-
-  try{
-    const payload = await buildPayload();
-    document.getElementById('payload').value = JSON.stringify(payload);
-
-    liveStatus.textContent = "Posting to Google Apps Script…";
-    ev.target.submit(); // sends to iframe
-
-    // Fallback: if iframe is blocked, you’ll never get 'load'.
-    setTimeout(() => {
-      if (document.getElementById('okBox').style.display !== 'block') {
-        liveStatus.textContent = "No iframe response yet. If your web app is not public, login redirect may be blocked in iframe.";
-      }
-      document.getElementById('submitBtn').disabled = false;
-    }, 2500);
-
-  }catch(e){
-    showError(e.message || String(e));
-    liveStatus.textContent = "Submit failed before posting (validation / image conversion).";
-    document.getElementById('submitBtn').disabled = false;
-  }
-});
   </script>
 </body>
 </html>
