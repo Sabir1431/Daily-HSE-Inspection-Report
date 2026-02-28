@@ -68,6 +68,7 @@
       border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--txt);
       padding:10px 14px; border-radius:12px; cursor:pointer;
     }
+    <div class="hint" id="liveStatus" style="margin-top:10px;">Ready.</div>
     button.primary{
       background:linear-gradient(180deg, rgba(74,163,255,.25), rgba(74,163,255,.08));
       border-color:rgba(74,163,255,.45);
@@ -582,32 +583,36 @@
     });
 
     // Submit (build JSON -> hidden input -> normal form submit to iframe)
-    document.getElementById('hseForm').addEventListener('submit', async (ev) => {
-      ev.preventDefault();
-      document.getElementById('submitBtn').disabled = true;
-      setStatus(null,'Submitting…');
-      document.getElementById('errBox').style.display = 'none';
-      document.getElementById('okBox').style.display = 'none';
+  document.getElementById('hseForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
 
-      try{
-        const payload = await buildPayload();
-        document.getElementById('payload').value = JSON.stringify(payload);
+  document.getElementById('submitBtn').disabled = true;
+  setStatus(null,'Submitting…');
+  liveStatus.textContent = "Preparing payload (including photos)…";
+  document.getElementById('errBox').style.display = 'none';
+  document.getElementById('okBox').style.display = 'none';
 
-        // Submit
-        ev.target.submit();
+  try{
+    const payload = await buildPayload();
+    document.getElementById('payload').value = JSON.stringify(payload);
 
-        // We cannot reliably read response from iframe (cross-origin),
-        // so we show success after a short delay (optimistic UI).
-        setTimeout(() => {
-          showOk("Submitted. Please verify in Google Drive under the inspector folder.");
-          document.getElementById('submitBtn').disabled = false;
-        }, 1200);
+    liveStatus.textContent = "Posting to Google Apps Script…";
+    ev.target.submit(); // sends to iframe
 
-      }catch(e){
-        showError(e.message || String(e));
-        document.getElementById('submitBtn').disabled = false;
+    // Fallback: if iframe is blocked, you’ll never get 'load'.
+    setTimeout(() => {
+      if (document.getElementById('okBox').style.display !== 'block') {
+        liveStatus.textContent = "No iframe response yet. If your web app is not public, login redirect may be blocked in iframe.";
       }
-    });
+      document.getElementById('submitBtn').disabled = false;
+    }, 2500);
+
+  }catch(e){
+    showError(e.message || String(e));
+    liveStatus.textContent = "Submit failed before posting (validation / image conversion).";
+    document.getElementById('submitBtn').disabled = false;
+  }
+});
   </script>
 </body>
 </html>
